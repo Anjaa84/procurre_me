@@ -1,11 +1,12 @@
 import 'dart:io';
 import 'package:flutter_project/model/contact.dart';
+import 'package:flutter_project/model/item.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 class DatabaseHelper {
-  static const _databaseName = 'ContactDatabase.db';
+  static const _databaseName = 'Database.db';
   static const _databaseVersion = 1;
 
   //singleton class
@@ -28,7 +29,7 @@ class DatabaseHelper {
   }
 
   Future _onCreateDB(Database db, int version) async {
-    //create tables
+//    create tables
     await db.execute('''
       CREATE TABLE ${Contact.tblContact}(
         ${Contact.colId} INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -36,12 +37,27 @@ class DatabaseHelper {
         ${Contact.colMobile} TEXT NOT NULL
       )
       ''');
+
+    await db.execute('''
+      CREATE TABLE ${Item.tblItem}(
+        ${Item.colId} INTEGER PRIMARY KEY AUTOINCREMENT,
+        ${Item.colName} TEXT NOT NULL,
+        ${Item.colBrand} TEXT NOT NULL,
+        ${Item.colPrice} TEXT NOT NULL
+        
+      )
+      ''');
+
+
+
+
   }
 
   //contact - insert
   Future<int> insertContact(Contact contact) async {
     Database db = await database;
     return await db.insert(Contact.tblContact, contact.toMap());
+
   }
 //contact - update
   Future<int> updateContact(Contact contact) async {
@@ -63,4 +79,41 @@ class DatabaseHelper {
         ? []
         : contacts.map((x) => Contact.fromMap(x)).toList();
   }
+
+
+   Future<int>insertItems(Item item) async{
+     Database db = await database;
+     return await db.insert(Item.tblItem, item.toMap());
+
+
+   }
+
+   Future<List<Item>>fetchItems() async{
+    Database db = await database;
+    List items = await db.query(Item.tblItem);
+    return items.length ==0
+        ? []
+        :items.map((e) => Item.fromMap(e)).toList();
+
+   }
+
+  //item - update
+  Future<int> updateItem(Item item) async {
+    Database db = await database;
+    return await db.update(Item.tblItem, item.toMap(),
+        where: '${Item.colId}=?', whereArgs: [item.itemId]);
+  }
+
+  //contact - delete
+  Future<int> deleteItem(int id) async {
+    Database db = await database;
+    return await db.delete(Item.tblItem,
+        where: '${Item.colId}=?', whereArgs: [id]);
+  }
+
+
+
+
+
 }
+
