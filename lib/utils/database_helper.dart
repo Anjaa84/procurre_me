@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:flutter_project/model/contact.dart';
 import 'package:flutter_project/model/item.dart';
+import 'package:flutter_project/model/orders.dart';
+import 'package:flutter_project/model/supplier.dart';
 import 'package:flutter_project/model/user.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -59,6 +61,27 @@ class DatabaseHelper {
         ${User.colEmail} TEXT 
         
         
+      )
+      ''');
+
+    await db.execute('''
+      CREATE TABLE ${Orders.tblOrder}(
+        ${Orders.colId} INTEGER PRIMARY KEY AUTOINCREMENT,
+        ${Orders.colSLocation} TEXT,
+        ${Orders.colSManager} TEXT ,
+        ${Orders.colItemName} TEXT ,
+        ${Orders.colSupplier} TEXT ,
+        ${Orders.colPrice} TEXT ,
+        ${Orders.colDate} TEXT 
+        
+        
+      )
+      ''');
+
+    await db.execute('''
+      CREATE TABLE ${Supplier.tblSupplier}(
+        ${Supplier.colId} INTEGER PRIMARY KEY AUTOINCREMENT,
+        ${Supplier.colCompanyName} TEXT   
       )
       ''');
 
@@ -148,6 +171,33 @@ class DatabaseHelper {
         :users.map((e) => User.fromMap(e)).toList();
 
   }
+
+  //insert order
+  Future<int> insertOrder(Orders order) async {
+
+    Database db = await database;
+    return await db.insert(User.tblUser, order.toMap());
+
+  }
+
+  //insert Supplier
+  Future<int> insertSupplier(Supplier supplier) async {
+    Database db = await database;
+    return await db.insert(Supplier.tblSupplier, supplier.toMap());
+
+  }
+
+  //get Supplier
+
+  Future<List<Supplier>> fetchSupplier() async {
+    Database db = await database;
+    List<Map> supplier = await db.query(Supplier.tblSupplier);
+    return supplier.length == 0
+        ? []
+        : supplier.map((x) => Supplier.fromMap(x)).toList();
+  }
+
+  //toDropdown
 
 
 
