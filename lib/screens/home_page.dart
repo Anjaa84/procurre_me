@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_project/screens/admin_page.dart';
 import 'package:flutter_project/screens/item_page.dart';
 import 'package:flutter_project/screens/order_page.dart';
+import 'package:flutter_project/screens/superVisor.dart';
+import 'package:flutter_project/screens/supplier_page.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -45,14 +48,35 @@ class _HomePageState extends State<HomePage> {
                   child: Text('Orders'),),
               ),
               Expanded(
+                flex: 1,
                 child: RaisedButton(
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => ItemPage()),
+                      MaterialPageRoute(builder: (context) => AdminPage()),
                     );
                   },
-                  child: Text('Items'),),
+                  child: Text('Admin'),),
+              ),
+              Expanded(
+                child: RaisedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SupplierPage()),
+                    );
+                  },
+                  child: Text('Supplier'),),
+              ),
+              Expanded(
+                child: RaisedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SupervisorPage()),
+                    );
+                  },
+                  child: Text('Supervisor'),),
               )
             ],
           ),

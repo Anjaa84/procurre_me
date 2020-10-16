@@ -1,35 +1,38 @@
 class Orders {
   static const tblOrder = 'orders';
   static const colId = 'orderId';
-  static const colSLocation = 'SLocation';
-  static const colSManager = 'SManager';
+  static const colSLocation = 'sLocation';
+  static const colSManager = 'sManager';
   static const colItemName = 'itemName';
-  static const colSupplier = 'Supplier';
+  static const colSupplier = 'supplier';
   static const colPrice= 'price';
   static const colDate= 'date';
+  static const colStatus= 'status';
 
   int orderId;
-  String SLocation;
+  String sLocation;
   String SManager;
   String itemName;
   String Supplier;
   int price;
   String date;
+  String status;
 
-  Orders({this.orderId,this.SLocation,this.SManager,this.itemName,this.Supplier,this.price,this.date});
+  Orders({this.orderId,this.sLocation,this.SManager,this.itemName,this.Supplier,this.price,this.date,this.status});
 
   Orders.fromMap (Map map){
     orderId = map[colId];
-    SLocation = map[colSLocation];
+    sLocation = map[colSLocation];
     SManager = map[colSManager];
     itemName = map[colItemName];
     Supplier = map[colSupplier];
     price = map[colPrice];
     date = map[colDate];
+    status = map[colStatus];
   }
 
   Map<String ,dynamic> toMap(){
-    var map = <String,dynamic>{colSLocation:SLocation,colSManager:SManager,colItemName:itemName,colSupplier:Supplier,colPrice:price,colDate:date};
+    var map = <String,dynamic>{colSLocation:sLocation,colSManager:SManager,colItemName:itemName,colSupplier:Supplier,colPrice:price,colDate:date,colStatus:status};
     if(orderId != null){
       map[colId]=orderId;
     }

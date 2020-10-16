@@ -1,8 +1,10 @@
 import 'package:dropdown_formfield/dropdown_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_project/model/item.dart';
+import 'package:flutter_project/model/orders.dart';
 import 'package:flutter_project/model/supplier.dart';
 import 'package:flutter_project/model/user.dart';
+import 'package:flutter_project/screens/single_order_page.dart';
 import 'package:flutter_project/utils/database_helper.dart';
 
 class OrderPage extends StatefulWidget {
@@ -13,36 +15,124 @@ class OrderPage extends StatefulWidget {
 class _OrderPageState extends State<OrderPage> {
   Item _item = Item();
   User _user = User();
+  Orders _order=Orders();
   User _currentUser;
   Supplier _currentSupplier;
   List<Item> _items = [];
+  List<Orders> _orders = [];
+
+
   DatabaseHelper _dbHelper;
   String _currentItem;
   List<DropdownMenuItem<String>> _dropDownMenuItems;
   final _formKey = GlobalKey<FormState>();
   final _ctrlQuantity = TextEditingController();
+  final _ctrlSiteLocation=TextEditingController();
   final _ctrlSupplierName = TextEditingController();
+  final _ctrlSupplier = TextEditingController();
+  final _ctrlSupplierPrice = TextEditingController();
+  final _ctrlDate = TextEditingController();
   String _myActivity;
     String _myActivityResult;
 
 
-
-  _refreshItemList() async {
-    List<Item> x = await _dbHelper.fetchItems();
+  _showForEdit(index) {
     setState(() {
-      _items = x;
+      _item = _items[index];
+
     });
   }
 
-  _saveForm() {
+
+  _onSubmit() async {
     var form = _formKey.currentState;
     if (form.validate()) {
       form.save();
-      setState(() {
-        _myActivityResult = _myActivity;
-      });
+      if (_order.orderId == null)
+        await _dbHelper.insertOrder(_order);
+      // else
+      //   await _dbHelper.updateItem(_supplier);
+      // _resetForm();
+      // form.reset();
+      // await _refreshItemList();
     }
   }
+
+  _refreshOrderList() async {
+    List<Orders> x = await _dbHelper.fetchOrders();
+    setState(() {
+      _orders = x;
+    });
+  }
+
+  // _resetForm() {
+  //   setState(() {
+  //     _formKey.currentState.reset();
+  //     _ctrlName.clear();
+  //     _ctrlBrand.clear();
+  //     _ctrlPrice.clear();
+  //     _item.itemId = null;
+  //   });
+  // }
+
+  _list() => Expanded(
+    child: Card(
+      margin: EdgeInsets.fromLTRB(20, 30, 20, 0),
+      child: Scrollbar(
+        child: ListView.builder(
+          shrinkWrap: true,
+          padding: const EdgeInsets.all(8),
+          itemBuilder: (context, index) {
+            return Column(
+              children: <Widget>[
+                ListTile(
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>SingleOrderPage(index:index,orderItem: _orders[index],)));
+
+                  },
+                  leading: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+
+                      Text(
+                        'Id: ${_orders[index].orderId}',
+                        style: TextStyle(fontSize: 10),
+                      ),
+                      Icon(
+                        Icons.build,
+                        color: Colors.deepPurpleAccent,
+                        size: 20.0,
+                      ),
+                    ],
+                  ),
+                  title: Text(
+                    _orders[index].sLocation.toUpperCase(),
+                    style: TextStyle(
+                        color: Colors.black, fontWeight: FontWeight.bold),
+                  ),
+
+
+                  // trailing: IconButton(
+                  //     icon: Icon(Icons.delete_sweep, color: Colors.black),
+                  //     onPressed: () async {
+                  //       await _dbHelper.deleteItem(_items[index].itemId);
+                  //       // _resetForm();
+                  //       _refreshOrderList();
+                  //     }),
+                ),
+                Divider(
+                  height: 5.0,
+                ),
+              ],
+            );
+          },
+          itemCount: _orders.length,
+        ),
+      ),
+    ),
+  );
+
+
 
   @override
   void initState() {
@@ -52,8 +142,7 @@ class _OrderPageState extends State<OrderPage> {
 //    _dropDownMenuItems=getDropDownMenuItems();
 //    _currentItem = _items[0].itemName;
     _dbHelper = DatabaseHelper.instance;
-    _refreshItemList();
-
+    _refreshOrderList();
   }
 
 
@@ -92,6 +181,14 @@ class _OrderPageState extends State<OrderPage> {
       key: _formKey,
       child: Column(
         children: <Widget>[
+
+          TextFormField(
+            controller: _ctrlSiteLocation,
+            decoration: InputDecoration(labelText: 'Site Location'),
+            validator: (val) =>
+            (val.length == 0 ? 'This field is mandatory' : null),
+            onSaved: (val) => setState(() => _order.sLocation = val),
+          ),
           FutureBuilder<List<User>>(
               future: _dbHelper.getUserModelData(),
               builder: (BuildContext context,
@@ -115,6 +212,15 @@ class _OrderPageState extends State<OrderPage> {
 
                 );
               }),
+
+          TextFormField(
+            controller: _ctrlSupplierName,
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(labelText: 'Item Name'),
+            validator: (val) =>
+            (val.length == 0 ? 'This field is mandatory' : null),
+            onSaved: (val) => setState(() => _order.itemName = val),
+          ),
 
           FutureBuilder<List<Supplier>>(
               future: _dbHelper.getSupplierModelData(),
@@ -140,28 +246,27 @@ class _OrderPageState extends State<OrderPage> {
                 );
               }),
 
+                TextFormField(
+                  controller: _ctrlSupplierPrice,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(labelText: 'Price'),
+                  validator: (val) =>
+                  (val.length == 0 ? 'This field is mandatory' : null),
+                  onSaved: (val) => setState(() => _order.price = int.parse(val)),
+                ),
 
-
-
-          TextFormField(
-            controller: _ctrlQuantity,
-            keyboardType: TextInputType.number,
-            decoration: InputDecoration(labelText: 'Quantity'),
-            validator: (val) =>
-            (val.length == 0 ? 'This field is mandatory' : null),
-            onSaved: (val) => setState(() => _item.itemPrice = val),
-          ),
-          TextFormField(
-            controller: _ctrlSupplierName,
-            decoration: InputDecoration(labelText: 'Supplier Name'),
-            validator: (val) =>
-            (val.length == 0 ? 'This field is mandatory' : null),
-            onSaved: (val) => setState(() => _item.itemBrand = val),
-          ),
+                TextFormField(
+                  controller: _ctrlDate,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(labelText: 'Date'),
+                  validator: (val) =>
+                  (val.length == 0 ? 'This field is mandatory' : null),
+                  onSaved: (val) => setState(() => _order.date = val),
+                ),
           Container(
             margin: EdgeInsets.all(10.0),
             child: RaisedButton(
-              onPressed: () => _saveForm(),
+              onPressed: () => _onSubmit(),
               child: Text('Submit'),
               color: Colors.deepPurpleAccent,
               textColor: Colors.white,
@@ -190,7 +295,7 @@ class _OrderPageState extends State<OrderPage> {
 
          Column(
            children: [
-            _form(),
+           _form(),_list()
 
            ],
          )

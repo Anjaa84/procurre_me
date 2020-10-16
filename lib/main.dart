@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: darkBlueColor,
       ),
-      home: OrderPage(),
+      home: HomePage(),
     );
   }
 }

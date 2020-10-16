@@ -71,6 +71,20 @@ class DatabaseHelper {
       )
       ''');
 
+    await db.execute('''
+      CREATE TABLE ${Orders.tblOrder}(
+        ${Orders.colId} INTEGER PRIMARY KEY AUTOINCREMENT,
+        ${Orders.colSLocation} TEXT  ,
+         ${Orders.colSManager} TEXT  ,
+          ${Orders.colItemName} TEXT  ,
+           ${Orders.colSupplier} TEXT  ,
+            ${Orders.colPrice} INTEGER  ,
+             ${Orders.colDate} TEXT  ,
+              ${Orders.colStatus} TEXT NULL
+            
+         
+      )
+      ''');
 
   }
 
@@ -170,15 +184,57 @@ class DatabaseHelper {
       return User.fromMap(item);
     }).toList();
 
-    print(result);
+
     return list;
   }
 
   //insert order
   Future<int> insertOrder(Orders order) async {
 
+
     Database db = await database;
-    return await db.insert(User.tblUser, order.toMap());
+    return await db.insert(Orders.tblOrder, order.toMap());
+
+  }
+
+//fetchOrders
+  Future<List<Orders>> fetchOrders() async {
+    Database db = await database;
+    List<Map> orders = await db.query(Orders.tblOrder);
+    return orders.length == 0
+        ? []
+        : orders.map((x) => Orders.fromMap(x)).toList();
+
+   print(orders);
+  }
+
+  //fetchOrders>100000
+  Future<List<Orders>> getOrdersPrice() async {
+    Database db = await database;
+    String sql;
+    sql = "SELECT * FROM  ${Orders.tblOrder} where ${Orders.colPrice}>100000 and ${Orders.colStatus}='Pending' ";
+
+    var result = await db.rawQuery(sql);
+    if (result.length == 0) return null;
+
+    List<Orders> list = result.map((item) {
+      return Orders.fromMap(item);
+    }).toList();
+
+
+    return list;
+  }
+
+  Future<int> insertOrderStatus(String status, int index) async{
+    print(status);
+    print(index);
+    Database db = await database;
+    String sql;
+    sql = "UPDATE ${Orders.tblOrder} SET ${Orders.colStatus}='${status}' where ${Orders.colId}=${index}";
+
+    var result = await db.rawQuery(sql);
+print(sql);
+
 
   }
 
@@ -213,7 +269,7 @@ class DatabaseHelper {
       return Supplier.fromMap(item);
     }).toList();
 
-    print(result);
+
     return list;
   }
 

@@ -10,16 +10,30 @@ class SupplierPage extends StatefulWidget {
 
 class _SupplierPageState extends State<SupplierPage> {
   Supplier _supplier=Supplier();
+  List<Supplier> _supplier1 = [];
   final _formKey = GlobalKey<FormState>();
   final _ctrlSupplier = TextEditingController();
   DatabaseHelper _dbHelper;
 
+
+
+  _refreshOrderList() async {
+    List<Supplier> x = await _dbHelper.fetchSupplier();
+    setState(() {
+      _supplier1 = x;
+    });
+  }
+
+
   @override
   void initState() {
-
+    // TODO: implement initState
     super.initState();
+//    _refreshItemList();
+//    _dropDownMenuItems=getDropDownMenuItems();
+//    _currentItem = _items[0].itemName;
     _dbHelper = DatabaseHelper.instance;
-
+    _refreshOrderList();
   }
 
 
@@ -45,6 +59,64 @@ class _SupplierPageState extends State<SupplierPage> {
 
     });
   }
+
+  _list() =>
+      Expanded(
+        child: Card(
+          margin: EdgeInsets.fromLTRB(20, 30, 20, 0),
+          child: Scrollbar(
+            child: ListView.builder(
+              shrinkWrap: true,
+              padding: const EdgeInsets.all(8),
+              itemBuilder: (context, index) {
+                return Column(
+                  children: <Widget>[
+                    ListTile(
+
+                      leading: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+
+                          Text(
+                            'Id: ${_supplier1[index].supplierId}',
+                            style: TextStyle(fontSize: 10),
+                          ),
+                          Icon(
+                            Icons.build,
+                            color: Colors.deepPurpleAccent,
+                            size: 20.0,
+                          ),
+                        ],
+                      ),
+                      title: Text(
+                        _supplier1[index].companyName.toUpperCase(),
+                        style: TextStyle(
+                            color: Colors.black, fontWeight: FontWeight.bold),
+                      ),
+
+                      // onTap: () {
+                      //   _showForEdit(index);
+                      // },
+                      // trailing: IconButton(
+                      //     icon: Icon(Icons.delete_sweep, color: Colors.black),
+                      //     onPressed: () async {
+                      //       await _dbHelper.deleteItem(_items[index].itemId);
+                      //       // _resetForm();
+                      //       _refreshOrderList();
+                      //     }),
+                    ),
+                    Divider(
+                      height: 5.0,
+                    ),
+                  ],
+                );
+              },
+              itemCount: _supplier1.length,
+            ),
+          ),
+        ),
+      );
+
 
 
   _form() => Container(
@@ -92,7 +164,7 @@ class _SupplierPageState extends State<SupplierPage> {
 
           Column(
             children: [
-              _form(),
+              _form(),_list()
 
             ],
           )
