@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_project/model/contact.dart';
+import 'package:flutter_project/screens/admin_page.dart';
 import 'package:flutter_project/screens/home_page.dart';
 import 'package:flutter_project/screens/item_page.dart';
 import 'package:flutter_project/utils/database_helper.dart';
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: darkBlueColor,
       ),
-      home: HomePage(),
+      home: AdminPage(),
     );
   }
 }

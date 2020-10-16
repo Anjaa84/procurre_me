@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter_project/model/contact.dart';
 import 'package:flutter_project/model/item.dart';
+import 'package:flutter_project/model/user.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
@@ -48,7 +49,18 @@ class DatabaseHelper {
       )
       ''');
 
-
+    await db.execute('''
+      CREATE TABLE ${User.tblUser}(
+        ${User.colId} INTEGER PRIMARY KEY AUTOINCREMENT,
+        ${User.colRole} TEXT NOT NULL,
+        ${User.colFirstname} TEXT NOT NULL,
+        ${User.colLastname} TEXT NOT NULL,
+        ${User.colPassword} TEXT NOT NULL,
+        ${User.colEmail} TEXT NOT NULL
+        
+        
+      )
+      ''');
 
 
   }
@@ -119,8 +131,22 @@ class DatabaseHelper {
 
 // inserting user
 
+  Future<int> insertUser(User user) async {
+    Database db = await database;
+    return await db.insert(User.tblUser, user.toMap());
+
+  }
+//fetching user
 
 
+  Future<List<User>>fetchUsers() async{
+    Database db = await database;
+    List users = await db.query(User.tblUser);
+    return users.length ==0
+        ? []
+        :users.map((e) => User.fromMap(e)).toList();
+
+  }
 
 
 
