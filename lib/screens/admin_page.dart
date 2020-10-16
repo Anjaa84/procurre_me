@@ -8,12 +8,13 @@ class AdminPage extends StatefulWidget {
 }
 
 class _AdminPageState extends State<AdminPage> {
-  User _user;
+  User _user=User();
+
   List<User> _users =[];
 
   final _formKey = GlobalKey<FormState>();
   DatabaseHelper _dbHelper;
-  final _ctrlRole = TextEditingController();
+
   final _ctrlFirstName = TextEditingController();
   final _ctrlLastName = TextEditingController();
   final _ctrlEmail = TextEditingController();
@@ -22,7 +23,7 @@ class _AdminPageState extends State<AdminPage> {
 
 
   _dropDown(){
-    
+
     return DropdownButton<String>(
       items: <String>[ 'Account Manager', 'Supervisor', 'Site Manager'].map((String value) {
         return new DropdownMenuItem<String>(
@@ -51,7 +52,7 @@ class _AdminPageState extends State<AdminPage> {
             decoration: InputDecoration(labelText: 'First Name'),
             validator: (val) =>
             (val.length == 0 ? 'This field is mandatory' : null),
-            onSaved: (val) => _user.firstname),
+            onSaved: (val) =>  setState(() => _user.firstname=val),),
           TextFormField(
             controller: _ctrlLastName,
             decoration: InputDecoration(labelText: 'Last Name'),
@@ -93,13 +94,18 @@ class _AdminPageState extends State<AdminPage> {
     var form = _formKey.currentState;
     if (form.validate()) {
       form.save();
-      if (_user.id == null)
+
+      if (_user.userId == null) {
+
         await _dbHelper.insertUser(_user);
+
+      }else{
+      }
 //      else
 //        await _dbHelper.updateItem(_item);
 //      _resetForm();
       form.reset();
-//      await _refreshItemList();
+      await _updateUsers();
     }
   }
 
@@ -126,7 +132,7 @@ class _AdminPageState extends State<AdminPage> {
                     ],
                   ),
                   title: Text(
-                    _users[index].firstname.toUpperCase(),
+                    _users[index].role.toUpperCase(),
                     style: TextStyle(
                         color: Colors.deepPurpleAccent, fontWeight: FontWeight.bold),
                   ),
@@ -171,6 +177,7 @@ class _AdminPageState extends State<AdminPage> {
   void initState()  {
     // TODO: implement initState
     super.initState();
+    _dbHelper = DatabaseHelper.instance;
     _updateUsers();
   }
 

@@ -1,161 +1,138 @@
-//import 'package:flutter/material.dart';
-//import 'package:login/models/user.dart';
-//import 'package:login/screen/home_page.dart';
-//import 'package:login/services/response/login_response.dart';
-//import 'package:shared_preferences/shared_preferences.dart';
-//
-//class LoginPage extends StatefulWidget {
-//  @override
-//  _LoginPageState createState() => new _LoginPageState();
-//}
-//
-//enum LoginStatus { notSignIn, signIn }
-//
-//class _LoginPageState extends State<LoginPage> implements LoginCallBack {
-//  LoginStatus _loginStatus = LoginStatus.notSignIn;
-//  BuildContext _ctx;
-//  bool _isLoading = false;
-//  final formKey = new GlobalKey<FormState>();
-//  final scaffoldKey = new GlobalKey<ScaffoldState>();
-//
-//  String _username, _password;
-//
-//  LoginResponse _response;
-//
-//  _LoginPageState() {
-//    _response = new LoginResponse(this);
-//  }
-//
-//  void _submit() {
-//    final form = formKey.currentState;
-//
-//    if (form.validate()) {
-//      setState(() {
-//        _isLoading = true;
-//        form.save();
-//        _response.doLogin(_username, _password);
-//      });
-//    }
-//  }
-//
-//
-//  void _showSnackBar(String text) {
-//    scaffoldKey.currentState.showSnackBar(new SnackBar(
-//      content: new Text(text),
-//    ));
-//  }
-//
-//  var value;
-//  getPref() async {
-//    SharedPreferences preferences = await SharedPreferences.getInstance();
-//    setState(() {
-//      value = preferences.getInt("value");
-//
-//      _loginStatus = value == 1 ? LoginStatus.signIn : LoginStatus.notSignIn;
-//    });
-//  }
-//
-//  signOut() async {
-//    SharedPreferences preferences = await SharedPreferences.getInstance();
-//    setState(() {
-//      preferences.setInt("value", null);
-//      preferences.commit();
-//      _loginStatus = LoginStatus.notSignIn;
-//    });
-//  }
-//
-//  @override
-//  void initState() {
-//    super.initState();
-//    getPref();
-//  }
-//
-//  @override
-//  Widget build(BuildContext context) {
-//    switch (_loginStatus) {
-//      case LoginStatus.notSignIn:
-//        _ctx = context;
-//        var loginBtn = new RaisedButton(
-//          onPressed: _submit,
-//          child: new Text("Login"),
-//          color: Colors.green,
-//        );
-//        var loginForm = new Column(
-//          crossAxisAlignment: CrossAxisAlignment.center,
-//          children: <Widget>[
-//            new Form(
-//              key: formKey,
-//              child: new Column(
-//                children: <Widget>[
-//                  new Padding(
-//                    padding: const EdgeInsets.all(10.0),
-//                    child: new TextFormField(
-//                      onSaved: (val) => _username = val,
-//                      decoration: new InputDecoration(labelText: "Username"),
-//                    ),
-//                  ),
-//                  new Padding(
-//                    padding: const EdgeInsets.all(10.0),
-//                    child: new TextFormField(
-//                      onSaved: (val) => _password = val,
-//                      decoration: new InputDecoration(labelText: "Password"),
-//                    ),
-//                  )
-//                ],
-//              ),
-//            ),
-//            loginBtn
-//          ],
-//        );
-//
-//        return new Scaffold(
-//          appBar: new AppBar(
-//            title: new Text("Login Page"),
-//          ),
-//          key: scaffoldKey,
-//          body: new Container(
-//            child: new Center(
-//              child: loginForm,
-//            ),
-//          ),
-//        );
-//        break;
-//      case LoginStatus.signIn:
-//        return HomeScreen(signOut);
-//        break;
-//    }
-//  }
-//
-//  savePref(int value,String user, String pass) async {
-//    SharedPreferences preferences = await SharedPreferences.getInstance();
-//    setState(() {
-//      preferences.setInt("value", value);
-//      preferences.setString("user", user);
-//      preferences.setString("pass", pass);
-//      preferences.commit();
-//    });
-//  }
-//
-//  @override
-//  void onLoginError(String error) {
-//    _showSnackBar(error);
-//    setState(() {
-//      _isLoading = false;
-//    });
-//  }
-//
-//  @override
-//  void onLoginSuccess(User user) async {
-//
-//    if(user != null){
-//      savePref(1,user.username, user.password);
-//      _loginStatus = LoginStatus.signIn;
-//    }else{
-//      _showSnackBar("Login Gagal, Silahkan Periksa Login Anda");
-//      setState(() {
-//        _isLoading = false;
-//      });
-//    }
-//
-//  }
-//}
+import 'package:flutter/material.dart';
+import 'package:flutter_project/screens/admin_page.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
+class LoginPage extends StatefulWidget {
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final _formKey = GlobalKey<FormState>();
+
+  final _ctrlName = TextEditingController();
+  final _ctrlPassword = TextEditingController();
+  FToast fToast;
+
+  @override
+  void initState() {
+    super.initState();
+    fToast = FToast();
+    fToast.init(context);
+  }
+
+  _showToast() {
+    Widget toast = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25.0),
+        color: Colors.greenAccent,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.check),
+          SizedBox(
+            width: 12.0,
+          ),
+          Text("This is a Custom Toast"),
+        ],
+      ),
+    );
+
+
+    fToast.showToast(
+      child: toast,
+      gravity: ToastGravity.BOTTOM,
+      toastDuration: Duration(seconds: 2),
+    );
+
+    // Custom Toast Position
+    fToast.showToast(
+        child: toast,
+        toastDuration: Duration(seconds: 2),
+        positionedToastBuilder: (context, child) {
+          return Positioned(
+            child: child,
+            top: 16.0,
+            left: 16.0,
+          );
+        });
+  }
+
+
+  _form() => Container(
+        color: Colors.white,
+        padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: <Widget>[
+              TextFormField(
+                controller: _ctrlName,
+                decoration: InputDecoration(labelText: 'First Name'),
+                validator: (val) =>
+                    (val.length == 0 ? 'This field is mandatory' : null),
+              ),
+              TextFormField(
+                controller: _ctrlPassword,
+                decoration: InputDecoration(labelText: 'Last Name'),
+                validator: (val) =>
+                    (val.length == 0 ? 'This field is mandatory' : null),
+              ),
+              Container(
+                margin: EdgeInsets.all(10.0),
+                child: RaisedButton(
+                  onPressed: () => _onSubmit(),
+                  child: Text('Submit'),
+                  color: Colors.deepPurpleAccent,
+                  textColor: Colors.white,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+
+  _onSubmit() async {
+    var form = _formKey.currentState;
+    if (form.validate()) {
+      form.save();
+      if ((_ctrlPassword.text == '1234')) {
+
+
+
+
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => AdminPage()));
+
+      } else {
+        Fluttertoast.showToast(
+            msg: "This is Center Short Toast",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Login'),
+      ),
+      resizeToAvoidBottomInset: false,
+      body: Center(
+        child: Column(
+          children: [
+            _form(),
+          ],
+        ),
+      ),
+    );
+  }
+}
