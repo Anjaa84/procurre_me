@@ -9,7 +9,13 @@ class _SupplierPageState extends State<SupplierPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text('Supplier'),
+      centerTitle: true,
 
+      ),
+      body:Container(
+        
+      ),
     );
   }
 }

@@ -115,7 +115,7 @@ class _ItemPageState extends State<ItemPage> {
                             style: TextStyle(fontSize: 10),
                           ),
                           Icon(
-                            Icons.shop_outlined,
+                            Icons.airport_shuttle,
                             color: Colors.deepPurpleAccent,
                             size: 20.0,
                           ),
