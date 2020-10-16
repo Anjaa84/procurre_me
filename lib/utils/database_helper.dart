@@ -52,11 +52,11 @@ class DatabaseHelper {
     await db.execute('''
       CREATE TABLE ${User.tblUser}(
         ${User.colId} INTEGER PRIMARY KEY AUTOINCREMENT,
-        ${User.colRole} TEXT NOT NULL,
-        ${User.colFirstname} TEXT NOT NULL,
-        ${User.colLastname} TEXT NOT NULL,
-        ${User.colPassword} TEXT NOT NULL,
-        ${User.colEmail} TEXT NOT NULL
+        ${User.colRole} TEXT,
+        ${User.colFirstname} TEXT ,
+        ${User.colLastname} TEXT ,
+        ${User.colPassword} TEXT ,
+        ${User.colEmail} TEXT 
         
         
       )
@@ -132,6 +132,7 @@ class DatabaseHelper {
 // inserting user
 
   Future<int> insertUser(User user) async {
+    print('thaoa');
     Database db = await database;
     return await db.insert(User.tblUser, user.toMap());
 
