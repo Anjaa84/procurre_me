@@ -1,6 +1,7 @@
 import 'package:dropdown_formfield/dropdown_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_project/model/item.dart';
+import 'package:flutter_project/model/supplier.dart';
 import 'package:flutter_project/model/user.dart';
 import 'package:flutter_project/utils/database_helper.dart';
 
@@ -13,6 +14,7 @@ class _OrderPageState extends State<OrderPage> {
   Item _item = Item();
   User _user = User();
   User _currentUser;
+  Supplier _currentSupplier;
   List<Item> _items = [];
   DatabaseHelper _dbHelper;
   String _currentItem;
@@ -113,6 +115,31 @@ class _OrderPageState extends State<OrderPage> {
 
                 );
               }),
+
+          FutureBuilder<List<Supplier>>(
+              future: _dbHelper.getSupplierModelData(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<List<Supplier>> snapshot) {
+                if (!snapshot.hasData) return CircularProgressIndicator();
+                return DropdownButton<Supplier>(
+                  items: snapshot.data
+                      .map((supplier) => DropdownMenuItem<Supplier>(
+                    child: Text(supplier.companyName),
+                    value: supplier,
+                  ))
+                      .toList(),
+                  onChanged: (Supplier value) {
+                    setState(() {
+                      _currentSupplier = value;
+                    });
+                  },
+                  isExpanded: false,
+                  //value: _currentUser,
+                  hint: Text('Select Supplier'),
+
+                );
+              }),
+
 
 
 

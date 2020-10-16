@@ -64,6 +64,13 @@ class DatabaseHelper {
       )
       ''');
 
+    await db.execute('''
+      CREATE TABLE ${Supplier.tblSupplier}(
+        ${Supplier.colId} INTEGER PRIMARY KEY AUTOINCREMENT,
+        ${Supplier.colCompanyName} TEXT   
+      )
+      ''');
+
 
   }
 
@@ -194,7 +201,21 @@ class DatabaseHelper {
 
   //toDropdown
 
+  Future<List<Supplier>> getSupplierModelData() async {
+    Database db = await database;
+    String sql;
+    sql = "SELECT * FROM  ${Supplier.tblSupplier} ";
 
+    var result = await db.rawQuery(sql);
+    if (result.length == 0) return null;
+
+    List<Supplier> list = result.map((item) {
+      return Supplier.fromMap(item);
+    }).toList();
+
+    print(result);
+    return list;
+  }
 
 
 }
