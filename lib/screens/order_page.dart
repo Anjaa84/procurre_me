@@ -1,6 +1,7 @@
 import 'package:dropdown_formfield/dropdown_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_project/model/item.dart';
+import 'package:flutter_project/model/user.dart';
 import 'package:flutter_project/utils/database_helper.dart';
 
 class OrderPage extends StatefulWidget {
@@ -10,6 +11,8 @@ class OrderPage extends StatefulWidget {
 
 class _OrderPageState extends State<OrderPage> {
   Item _item = Item();
+  User _user = User();
+  User _currentUser;
   List<Item> _items = [];
   DatabaseHelper _dbHelper;
   String _currentItem;
@@ -46,8 +49,30 @@ class _OrderPageState extends State<OrderPage> {
 //    _refreshItemList();
 //    _dropDownMenuItems=getDropDownMenuItems();
 //    _currentItem = _items[0].itemName;
+    _dbHelper = DatabaseHelper.instance;
+    _refreshItemList();
 
   }
+
+
+  _dropDown(){
+    List li = List();
+    li.add("ss");
+    return DropdownButton<String>(
+        items: <String>[ li[0], 'Supervisor', 'Site Manager'].map((String value) {
+        return new DropdownMenuItem<String>(
+          value: value,
+          child: new Text(value),
+        );
+      }).toList(),
+      onChanged: (val) {
+        setState(() => _user.role = val);
+
+      },
+    );
+  }
+
+
   List<DropdownMenuItem<String>> getDropDownMenuItems() {
     List<DropdownMenuItem<String>> items = new List();
     for (Item item in _items) {
@@ -65,39 +90,31 @@ class _OrderPageState extends State<OrderPage> {
       key: _formKey,
       child: Column(
         children: <Widget>[
+          FutureBuilder<List<User>>(
+              future: _dbHelper.getUserModelData(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<List<User>> snapshot) {
+                if (!snapshot.hasData) return CircularProgressIndicator();
+                return DropdownButton<User>(
+                  items: snapshot.data
+                      .map((user) => DropdownMenuItem<User>(
+                    child: Text(user.role),
+                    value: user,
+                  ))
+                      .toList(),
+                  onChanged: (User value) {
+                    setState(() {
+                      _currentUser = value;
+                    });
+                  },
+                  isExpanded: false,
+                  //value: _currentUser,
+                  hint: Text('Select User'),
 
-          DropDownFormField(
-            titleText: 'Select Item',
-            hintText: 'Please choose one',
-            value: _myActivity,
-            onSaved: (value) {
-              setState(() {
-                _myActivity = value;
-              });
-            },
-            onChanged: (value) {
-              setState(() {
-                _myActivity = value;
-              });
-            },
-            dataSource: [
-              {
-                "display": "Cement",
-                "value": "Cement",
-              },
-              {
-                "display": "Paint",
-                "value": "Paint",
-              },
-              {
-                "display": "Sand",
-                "value": "Sand",
-              },
+                );
+              }),
 
-            ],
-            textField: 'display',
-            valueField: 'value',
-          ),
+
 
           TextFormField(
             controller: _ctrlQuantity,

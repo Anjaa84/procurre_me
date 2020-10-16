@@ -149,6 +149,22 @@ class DatabaseHelper {
 
   }
 
+  Future<List<User>> getUserModelData() async {
+    Database db = await database;
+    String sql;
+    sql = "SELECT * FROM  ${User.tblUser} ";
+
+    var result = await db.rawQuery(sql);
+    if (result.length == 0) return null;
+
+    List<User> list = result.map((item) {
+      return User.fromMap(item);
+    }).toList();
+
+    print(result);
+    return list;
+  }
+
 
 
 
