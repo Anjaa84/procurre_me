@@ -64,27 +64,6 @@ class DatabaseHelper {
       )
       ''');
 
-    await db.execute('''
-      CREATE TABLE ${Orders.tblOrder}(
-        ${Orders.colId} INTEGER PRIMARY KEY AUTOINCREMENT,
-        ${Orders.colSLocation} TEXT,
-        ${Orders.colSManager} TEXT ,
-        ${Orders.colItemName} TEXT ,
-        ${Orders.colSupplier} TEXT ,
-        ${Orders.colPrice} TEXT ,
-        ${Orders.colDate} TEXT 
-        
-        
-      )
-      ''');
-
-    await db.execute('''
-      CREATE TABLE ${Supplier.tblSupplier}(
-        ${Supplier.colId} INTEGER PRIMARY KEY AUTOINCREMENT,
-        ${Supplier.colCompanyName} TEXT   
-      )
-      ''');
-
 
   }
 
@@ -170,6 +149,22 @@ class DatabaseHelper {
         ? []
         :users.map((e) => User.fromMap(e)).toList();
 
+  }
+
+  Future<List<User>> getUserModelData() async {
+    Database db = await database;
+    String sql;
+    sql = "SELECT * FROM  ${User.tblUser} ";
+
+    var result = await db.rawQuery(sql);
+    if (result.length == 0) return null;
+
+    List<User> list = result.map((item) {
+      return User.fromMap(item);
+    }).toList();
+
+    print(result);
+    return list;
   }
 
   //insert order
