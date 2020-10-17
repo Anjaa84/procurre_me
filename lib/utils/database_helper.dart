@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_project/model/contact.dart';
+import 'package:flutter_project/model/inquiry.dart';
 import 'package:flutter_project/model/item.dart';
 import 'package:flutter_project/model/orders.dart';
 import 'package:flutter_project/model/supplier.dart';
@@ -15,9 +16,11 @@ class DatabaseHelper {
 
   //singleton class
   DatabaseHelper._();
+
   static final DatabaseHelper instance = DatabaseHelper._();
 
   Database _database;
+
   Future<Database> get database async {
     if (_database != null) return _database;
     _database = await _initDatabase();
@@ -42,6 +45,7 @@ class DatabaseHelper {
       )
       ''');
 
+    //create table for item
     await db.execute('''
       CREATE TABLE ${Item.tblItem}(
         ${Item.colId} INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -52,6 +56,7 @@ class DatabaseHelper {
       )
       ''');
 
+    //create table for USER
     await db.execute('''
       CREATE TABLE ${User.tblUser}(
         ${User.colId} INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -65,6 +70,7 @@ class DatabaseHelper {
       )
       ''');
 
+    //create table for SUPPLIER
     await db.execute('''
       CREATE TABLE ${Supplier.tblSupplier}(
         ${Supplier.colId} INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -72,6 +78,7 @@ class DatabaseHelper {
       )
       ''');
 
+    //create table for ORDER
     await db.execute('''
       CREATE TABLE ${Orders.tblOrder}(
         ${Orders.colId} INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -85,27 +92,28 @@ class DatabaseHelper {
                     
       )
       ''');
-
   }
 
   //contact - insert
   Future<int> insertContact(Contact contact) async {
     Database db = await database;
     return await db.insert(Contact.tblContact, contact.toMap());
-
   }
+
 //contact - update
   Future<int> updateContact(Contact contact) async {
     Database db = await database;
     return await db.update(Contact.tblContact, contact.toMap(),
         where: '${Contact.colId}=?', whereArgs: [contact.id]);
   }
+
 //contact - delete
   Future<int> deleteContact(int id) async {
     Database db = await database;
     return await db.delete(Contact.tblContact,
         where: '${Contact.colId}=?', whereArgs: [id]);
   }
+
 //contact - retrieve all
   Future<List<Contact>> fetchContacts() async {
     Database db = await database;
@@ -115,22 +123,18 @@ class DatabaseHelper {
         : contacts.map((x) => Contact.fromMap(x)).toList();
   }
 
+  //INSERT FOR ITEM
+  Future<int> insertItems(Item item) async {
+    Database db = await database;
+    return await db.insert(Item.tblItem, item.toMap());
+  }
 
-   Future<int>insertItems(Item item) async{
-     Database db = await database;
-     return await db.insert(Item.tblItem, item.toMap());
-
-
-   }
-
-   Future<List<Item>>fetchItems() async{
+  //GET  ITEM
+  Future<List<Item>> fetchItems() async {
     Database db = await database;
     List items = await db.query(Item.tblItem);
-    return items.length ==0
-        ? []
-        :items.map((e) => Item.fromMap(e)).toList();
-
-   }
+    return items.length == 0 ? [] : items.map((e) => Item.fromMap(e)).toList();
+  }
 
   //item - update
   Future<int> updateItem(Item item) async {
@@ -142,38 +146,29 @@ class DatabaseHelper {
   //contact - delete
   Future<int> deleteItem(int id) async {
     Database db = await database;
-    return await db.delete(Item.tblItem,
-        where: '${Item.colId}=?', whereArgs: [id]);
+    return await db
+        .delete(Item.tblItem, where: '${Item.colId}=?', whereArgs: [id]);
   }
-
-
-
-
 
   // User
 
 // inserting user
-
   Future<int> insertUser(User user) async {
     print('thaoa');
     Database db = await database;
     return await db.insert(User.tblUser, user.toMap());
-
   }
-//fetching user
 
-
-  Future<List<User>>fetchUsers() async{
+  //fetching user
+  Future<List<User>> fetchUsers() async {
     Database db = await database;
     List users = await db.query(User.tblUser);
 
     print(users);
-    return users.length ==0
-        ? []
-        :users.map((e) => User.fromMap(e)).toList();
-
+    return users.length == 0 ? [] : users.map((e) => User.fromMap(e)).toList();
   }
 
+  //GET METHOD FOR USER FOR DROPDOWN
   Future<List<User>> getUserModelData() async {
     Database db = await database;
     String sql;
@@ -186,17 +181,13 @@ class DatabaseHelper {
       return User.fromMap(item);
     }).toList();
 
-
     return list;
   }
 
   //insert order
   Future<int> insertOrder(Orders order) async {
-
-
     Database db = await database;
     return await db.insert(Orders.tblOrder, order.toMap());
-
   }
 
 //fetchOrders
@@ -207,16 +198,15 @@ class DatabaseHelper {
         ? []
         : orders.map((x) => Orders.fromMap(x)).toList();
 
-   print(orders);
+    print(orders);
   }
 
   //fetchOrders>100000
   Future<List<Orders>> getOrdersPrice() async {
     Database db = await database;
     String sql;
-    sql = "SELECT * FROM  ${Orders.tblOrder} where ${Orders.colPrice}>100000 and ${Orders.colStatus} is  null  ";
-    //and ${Orders.colStatus}='Pending'
-
+    sql =
+        "SELECT * FROM  ${Orders.tblOrder} where ${Orders.colPrice}>100000 and ${Orders.colStatus} is  null  ";
     var result = await db.rawQuery(sql);
     if (result.length == 0) return null;
     print(result);
@@ -225,32 +215,29 @@ class DatabaseHelper {
       return Orders.fromMap(item);
     }).toList();
 
-
     return list;
   }
 
-  Future<int> insertOrderStatus(String status, int index) async{
+  //UpdateOrderStatus
+  Future<int> insertOrderStatus(String status, int index) async {
     print(status);
     print(index);
     Database db = await database;
     String sql;
-    sql = "UPDATE ${Orders.tblOrder} SET ${Orders.colStatus}='${status}' where ${Orders.colId}=${index}";
+    sql =
+        "UPDATE ${Orders.tblOrder} SET ${Orders.colStatus}='${status}' where ${Orders.colId}=${index}";
 
     var result = await db.rawQuery(sql);
     print(sql);
-
-
   }
 
   //insert Supplier
   Future<int> insertSupplier(Supplier supplier) async {
     Database db = await database;
     return await db.insert(Supplier.tblSupplier, supplier.toMap());
-
   }
 
   //get Supplier
-
   Future<List<Supplier>> fetchSupplier() async {
     Database db = await database;
     List<Map> supplier = await db.query(Supplier.tblSupplier);
@@ -259,8 +246,7 @@ class DatabaseHelper {
         : supplier.map((x) => Supplier.fromMap(x)).toList();
   }
 
-  //toDropdown
-
+  //toDropdown method
   Future<List<Supplier>> getSupplierModelData() async {
     Database db = await database;
     String sql;
@@ -272,7 +258,6 @@ class DatabaseHelper {
     List<Supplier> list = result.map((item) {
       return Supplier.fromMap(item);
     }).toList();
-
 
     return list;
   }
@@ -290,10 +275,12 @@ class DatabaseHelper {
       return Item.fromMap(item);
     }).toList();
 
-
     return list;
   }
 
-
+  //Insert a inquiry for a particular Order
+  Future<int> insertInquiry(Inquiry inquiry) async {
+    Database db = await database;
+    return await db.insert(Inquiry.tblInquiry, inquiry.toMap());
+  }
 }
-

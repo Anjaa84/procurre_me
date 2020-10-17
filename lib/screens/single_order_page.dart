@@ -1,13 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_project/model/inquiry.dart';
 import 'package:flutter_project/model/orders.dart';
 import 'package:flutter_project/utils/constants.dart';
+import 'package:flutter_project/utils/database_helper.dart';
 import 'package:flutter_project/utils/sizeconfig.dart';
 
 class SingleOrderPage extends StatelessWidget {
-final int index;
-final Orders orderItem;
-   SingleOrderPage({Key key, this.index,this.orderItem}) : super(key: key);
+    final int index;
+    final Orders orderItem;
+    SingleOrderPage({Key key, this.index,this.orderItem}) : super(key: key);
     final _ctrlInquiry = TextEditingController();
+    final _formKey = GlobalKey<FormState>();
+    DatabaseHelper _dbHelper;
+    Inquiry _inquiry=Inquiry();
+
+_onSubmit() async {
+  var form = _formKey.currentState;
+  if (form.validate()) {
+    form.save();
+    if (_inquiry.inquiryId == null)
+      await _dbHelper.insertInquiry(_inquiry);
+    // else
+    //   await _dbHelper.updateItem(_supplier);
+
+    // form.reset();
+    // await _refreshOrderList();
+    // _resetForm();
+  }
+}
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -81,12 +101,14 @@ final Orders orderItem;
                       }
                     },
                   ),
-                  RaisedButton(onPressed: (){
-
-
-
-                  },
-                    child: Text('submit'),
+                  Container(
+                    margin: EdgeInsets.all(10.0),
+                    child: RaisedButton(
+                      onPressed: () => _onSubmit(),
+                      child: Text('Submit'),
+                      color: Colors.deepPurpleAccent,
+                      textColor: Colors.white,
+                    ),
                   ),
                 ],
               ),
