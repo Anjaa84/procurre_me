@@ -103,11 +103,23 @@ class _AdminPageState extends State<AdminPage> {
       }
 //      else
 //        await _dbHelper.updateItem(_item);
-//      _resetForm();
       form.reset();
       await _updateUsers();
+      _resetForm();
     }
   }
+
+  _resetForm() {
+    setState(() {
+      _formKey.currentState.reset();
+      _ctrlFirstName.clear();
+      _ctrlLastName.clear();
+      _ctrlEmail.clear();
+      _ctrlPassword.clear();
+     _user.userId= null;
+    });
+  }
+
 
   _list() => Expanded(
     child: Card(

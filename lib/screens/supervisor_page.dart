@@ -9,10 +9,11 @@ class SupervisorPage extends StatefulWidget {
 
 class _SupervisorPageState extends State<SupervisorPage> {
   Orders _order = Orders();
-  List<Orders> _orders = [];
+  List<Orders> _orders = []; // list to store order objects
 
   DatabaseHelper _dbHelper;
 
+// method to fetch order list greater which price is greater than 100 000
   _refreshOrderList() async {
     List<Orders> x = await _dbHelper.getOrdersPrice();
     setState(() {
@@ -20,6 +21,7 @@ class _SupervisorPageState extends State<SupervisorPage> {
     });
   }
 
+// initalizing the app
   @override
   void initState() {
     // TODO: implement initState
@@ -31,6 +33,7 @@ class _SupervisorPageState extends State<SupervisorPage> {
     _refreshOrderList();
   }
 
+// drop down list that shows the status
   _dropDown(int index) {
     return DropdownButton<String>(
       items: <String>['Pending', 'Approved'].map((String value) {
@@ -46,7 +49,10 @@ class _SupervisorPageState extends State<SupervisorPage> {
     );
   }
 
-  _list() => Expanded(
+  //list that dipalys orders greater than 100 000
+  _list() {
+    if (_orders.length != null) {
+      return Expanded(
         child: Card(
           margin: EdgeInsets.fromLTRB(20, 30, 20, 0),
           child: Scrollbar(
@@ -79,7 +85,6 @@ class _SupervisorPageState extends State<SupervisorPage> {
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold),
                           ),
-
                         ],
                       ),
 
@@ -99,7 +104,13 @@ class _SupervisorPageState extends State<SupervisorPage> {
           ),
         ),
       );
-
+    } else {
+      return Center(
+        child: Text('No orders yet'),
+      );
+    }
+  }
+// build method where the  widget build
   @override
   Widget build(BuildContext context) {
     return Scaffold(
