@@ -33,7 +33,7 @@ class _SupervisorPageState extends State<SupervisorPage> {
 
   _dropDown(int index) {
     return DropdownButton<String>(
-      items: <String>['Pending', 'Apporved'].map((String value) {
+      items: <String>['Pending', 'Approved'].map((String value) {
         return new DropdownMenuItem<String>(
           value: value,
           child: new Text(value),

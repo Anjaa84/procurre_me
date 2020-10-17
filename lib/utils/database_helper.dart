@@ -80,11 +80,13 @@ class DatabaseHelper {
            ${Orders.colSupplier} TEXT  ,
             ${Orders.colPrice} INTEGER  ,
              ${Orders.colDate} TEXT  ,
-              ${Orders.colStatus} TEXT NULL
+              ${Orders.colStatus} TEXT DEFAULT 'Pending' NULL
             
          
       )
       ''');
+
+
 
   }
 
@@ -186,6 +188,7 @@ class DatabaseHelper {
 
 
     return list;
+    print(list);
   }
 
   //insert order
@@ -212,14 +215,15 @@ class DatabaseHelper {
   Future<List<Orders>> getOrdersPrice() async {
     Database db = await database;
     String sql;
-    sql = "SELECT * FROM  ${Orders.tblOrder} where ${Orders.colPrice}>100000 and ${Orders.colStatus}='Pending' ";
-
+    sql = "SELECT * FROM  ${Orders.tblOrder} where ${Orders.colPrice}>100000   ";
+    // and ${Orders.colStatus}='Pending'
     var result = await db.rawQuery(sql);
     if (result.length == 0) return null;
 
     List<Orders> list = result.map((item) {
       return Orders.fromMap(item);
     }).toList();
+    print(result);
 
 
     return list;
