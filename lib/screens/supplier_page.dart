@@ -46,9 +46,10 @@ class _SupplierPageState extends State<SupplierPage> {
         await _dbHelper.insertSupplier(_supplier);
       // else
       //   await _dbHelper.updateItem(_supplier);
-      // _resetForm();
-      // form.reset();
-      // await _refreshItemList();
+       form.reset();
+       await _refreshOrderList();
+      _resetForm();
+
     }
   }
 

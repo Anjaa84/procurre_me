@@ -40,7 +40,6 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
 
-
     fToast.showToast(
       child: toast,
       gravity: ToastGravity.BOTTOM,
@@ -59,7 +58,6 @@ class _LoginPageState extends State<LoginPage> {
           );
         });
   }
-
 
   _form() => Container(
         color: Colors.white,
@@ -99,13 +97,8 @@ class _LoginPageState extends State<LoginPage> {
     if (form.validate()) {
       form.save();
       if ((_ctrlPassword.text == '1234')) {
-
-
-
-
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => AdminPage()));
-
       } else {
         Fluttertoast.showToast(
             msg: "This is Center Short Toast",

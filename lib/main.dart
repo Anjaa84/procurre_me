@@ -6,13 +6,14 @@ import 'package:flutter_project/screens/item_page.dart';
 import 'package:flutter_project/screens/login_page.dart';
 import 'package:flutter_project/screens/order_page.dart';
 import 'package:flutter_project/screens/supplier_page.dart';
+import 'package:flutter_project/utils/constants.dart';
 import 'package:flutter_project/utils/database_helper.dart';
 
 void main() {
   runApp(MyApp());
 }
 
-const darkBlueColor = Color(0xff486579);
+
 
 class MyApp extends StatelessWidget {
   @override
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Contact App',
       theme: ThemeData(
-        primaryColor: darkBlueColor,
+        primaryColor: Constant.darkBlueColor,
       ),
       home: HomePage(),
     );
@@ -67,7 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: RaisedButton(
                   onPressed: () => _onSubmit(),
                   child: Text('Submit'),
-                  color: darkBlueColor,
+                  color: Constant.darkBlueColor,
                   textColor: Colors.white,
                 ),
               ),
@@ -111,20 +112,20 @@ class _MyHomePageState extends State<MyHomePage> {
                     ListTile(
                       leading: Icon(
                         Icons.account_circle,
-                        color: darkBlueColor,
+                        color:Constant.darkBlueColor,
                         size: 40.0,
                       ),
                       title: Text(
                         _contacts[index].name.toUpperCase(),
                         style: TextStyle(
-                            color: darkBlueColor, fontWeight: FontWeight.bold),
+                            color:Constant.darkBlueColor, fontWeight: FontWeight.bold),
                       ),
                       subtitle: Text(_contacts[index].mobile),
                       onTap: () {
                         _showForEdit(index);
                       },
                       trailing: IconButton(
-                          icon: Icon(Icons.delete_sweep, color: darkBlueColor),
+                          icon: Icon(Icons.delete_sweep, color:Constant.darkBlueColor,),
                           onPressed: () async {
                             await _dbHelper.deleteContact(_contacts[index].id);
                             _resetForm();
@@ -174,7 +175,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Center(
           child: Text(
             'Procure',
-            style: TextStyle(color: darkBlueColor),
+            style: TextStyle(color: Constant.darkBlueColor,),
           ),
         ),
       ),

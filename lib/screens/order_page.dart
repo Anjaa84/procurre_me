@@ -32,8 +32,8 @@ class _OrderPageState extends State<OrderPage> {
   final _ctrlSupplier = TextEditingController();
   final _ctrlSupplierPrice = TextEditingController();
   final _ctrlDate = TextEditingController();
-  String _myActivity;
-    String _myActivityResult;
+   String _myActivity;
+   String _myActivityResult;
 
 
   _showForEdit(index) {
@@ -52,9 +52,10 @@ class _OrderPageState extends State<OrderPage> {
         await _dbHelper.insertOrder(_order);
       // else
       //   await _dbHelper.updateItem(_supplier);
-      // _resetForm();
-      // form.reset();
-      // await _refreshItemList();
+
+       form.reset();
+      await _refreshOrderList();
+      _resetForm();
     }
   }
 
@@ -65,15 +66,17 @@ class _OrderPageState extends State<OrderPage> {
     });
   }
 
-  // _resetForm() {
-  //   setState(() {
-  //     _formKey.currentState.reset();
-  //     _ctrlName.clear();
-  //     _ctrlBrand.clear();
-  //     _ctrlPrice.clear();
-  //     _item.itemId = null;
-  //   });
-  // }
+   _resetForm() {
+     setState(() {
+       _formKey.currentState.reset();
+       _ctrlSiteLocation.clear();
+       _ctrlSupplierName.clear();
+       _ctrlSupplierPrice.clear();
+       _ctrlDate.clear();
+
+       _order.orderId = null;
+     });
+   }
 
   _list() => Expanded(
     child: Card(
@@ -215,7 +218,7 @@ class _OrderPageState extends State<OrderPage> {
 
           TextFormField(
             controller: _ctrlSupplierName,
-            keyboardType: TextInputType.number,
+
             decoration: InputDecoration(labelText: 'Item Name'),
             validator: (val) =>
             (val.length == 0 ? 'This field is mandatory' : null),

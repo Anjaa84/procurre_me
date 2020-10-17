@@ -212,7 +212,9 @@ class DatabaseHelper {
   Future<List<Orders>> getOrdersPrice() async {
     Database db = await database;
     String sql;
-    sql = "SELECT * FROM  ${Orders.tblOrder} where ${Orders.colPrice}>100000 and ${Orders.colStatus}='Pending' ";
+    sql = "SELECT * FROM  ${Orders.tblOrder} where ${Orders.colPrice}>100000";
+//    sql = "SELECT * FROM  ${Orders.tblOrder} where ${Orders.colPrice}>100000 and ${Orders.colStatus}='Pending' ";
+        print(sql);
 
     var result = await db.rawQuery(sql);
     if (result.length == 0) return null;

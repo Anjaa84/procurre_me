@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_project/model/item.dart';
 import 'package:flutter_project/screens/order_page.dart';
 import 'package:flutter_project/screens/supplier_page.dart';
+import 'package:flutter_project/utils/constants.dart';
 import 'package:flutter_project/utils/database_helper.dart';
 
 import '../main.dart';
@@ -54,7 +55,7 @@ class _ItemPageState extends State<ItemPage> {
                 child: RaisedButton(
                   onPressed: () => _onSubmit(),
                   child: Text('Submit'),
-                  color: darkBlueColor,
+                  color: Constant.darkBlueColor,
                   textColor: Colors.white,
                 ),
               ),
@@ -71,9 +72,10 @@ class _ItemPageState extends State<ItemPage> {
         await _dbHelper.insertItems(_item);
       else
         await _dbHelper.updateItem(_item);
-      _resetForm();
+
       form.reset();
       await _refreshItemList();
+      _resetForm();
     }
   }
 
@@ -124,7 +126,8 @@ class _ItemPageState extends State<ItemPage> {
                       title: Text(
                         _items[index].itemName.toUpperCase(),
                         style: TextStyle(
-                            color: darkBlueColor, fontWeight: FontWeight.bold),
+                            color: Constant.darkBlueColor,
+                            fontWeight: FontWeight.bold),
                       ),
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -137,7 +140,10 @@ class _ItemPageState extends State<ItemPage> {
                         _showForEdit(index);
                       },
                       trailing: IconButton(
-                          icon: Icon(Icons.delete_sweep, color: darkBlueColor),
+                          icon: Icon(
+                            Icons.delete_sweep,
+                            color: Constant.darkBlueColor,
+                          ),
                           onPressed: () async {
                             await _dbHelper.deleteItem(_items[index].itemId);
                             _resetForm();
@@ -181,7 +187,9 @@ class _ItemPageState extends State<ItemPage> {
         title: Center(
           child: Text(
             'Items',
-            style: TextStyle(color: darkBlueColor),
+            style: TextStyle(
+              color: Constant.darkBlueColor,
+            ),
           ),
         ),
       ),
@@ -190,11 +198,6 @@ class _ItemPageState extends State<ItemPage> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[_form(), _list()],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: (){
-          Navigator.push(context, MaterialPageRoute(builder:(context)=>OrderPage() ));
-        },
       ),
     );
   }
