@@ -16,9 +16,9 @@ class _OrderPageState extends State<OrderPage> {
   Item _item = Item();
   User _user = User();
   Orders _order=Orders();
-  User _currentUser;
-  Item _currentItemList;
-  Supplier _currentSupplier;
+  User _currentUser= User();
+  Item _currentItemList =Item();
+  Supplier _currentSupplier=Supplier();
   List<Item> _items = [];
   List<Orders> _orders = [];
 
@@ -199,7 +199,7 @@ class _OrderPageState extends State<OrderPage> {
                       .toList(),
                   onChanged: (User value) {
                     setState(() {
-                      _currentUser = value;
+                      _order.SManager=value.role;
                     });
                   },
                   isExpanded: false,
@@ -217,13 +217,13 @@ class _OrderPageState extends State<OrderPage> {
                 return DropdownButton<Item>(
                   items: snapshot.data
                       .map((itemVal) => DropdownMenuItem<Item>(
-                    child: Text("Item: "+itemVal.itemName+ " Brand: " +itemVal.itemBrand),
+                    child: Text(itemVal.itemName),
                     value: itemVal,
                   ))
                       .toList(),
                   onChanged: (Item value) {
                     setState(() {
-                      _currentItemList = value;
+                      _order.itemName = value.itemName;
                     });
                   },
                   isExpanded: false,
@@ -254,9 +254,9 @@ class _OrderPageState extends State<OrderPage> {
                     value: supplier,
                   ))
                       .toList(),
-                  onChanged: (Supplier value) {
+                  onChanged: (value) {
                     setState(() {
-                      _currentSupplier = value;
+                      _order.Supplier = value.companyName;
                     });
                   },
                   isExpanded: false,
