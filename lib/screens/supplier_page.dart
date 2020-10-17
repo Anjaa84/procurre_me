@@ -7,6 +7,13 @@ class SupplierPage extends StatefulWidget {
   _SupplierPageState createState() => _SupplierPageState();
 }
 
+class SupplierNameValidator{
+  static String validate(String value){
+  return value.isEmpty ? 'Supplier name cannot be null':null;
+  }
+
+}
+
 
 class _SupplierPageState extends State<SupplierPage> {
   Supplier _supplier=Supplier();
@@ -23,6 +30,8 @@ class _SupplierPageState extends State<SupplierPage> {
       _supplier1 = x;
     });
   }
+
+
 
 
   @override
@@ -81,6 +90,7 @@ class _SupplierPageState extends State<SupplierPage> {
                           Text(
                             'Id: ${_supplier1[index].supplierId}',
                             style: TextStyle(fontSize: 10),
+
                           ),
                           Icon(
                             Icons.build,
@@ -132,9 +142,9 @@ class _SupplierPageState extends State<SupplierPage> {
           TextFormField(
             controller: _ctrlSupplier,
             keyboardType: TextInputType.text,
+
             decoration: InputDecoration(labelText: 'Supplier Name'),
-            validator: (val) =>
-            (val.length == 0 ? 'This field is mandatory' : null),
+            validator:SupplierNameValidator.validate,
             onSaved: (val) => setState(() => _supplier.companyName = val),
           ),
 

@@ -7,6 +7,27 @@ import 'package:flutter_project/utils/database_helper.dart';
 
 import '../main.dart';
 
+class itemPrice{
+  static String validate(String value){
+    return value.isEmpty ? 'item Price cannot be null':null;
+  }
+
+}
+class itemNameValidator{
+  static String validate(String value){
+    return value.isEmpty ? 'item name cannot be null':null;
+  }
+
+}
+class itemBrand{
+  static String validate(String value){
+    return value.isEmpty ? 'item brand cannot be null':null;
+  }
+
+}
+
+
+
 class ItemPage extends StatefulWidget {
   @override
   _ItemPageState createState() => _ItemPageState();
@@ -31,23 +52,20 @@ class _ItemPageState extends State<ItemPage> {
               TextFormField(
                 controller: _ctrlName,
                 decoration: InputDecoration(labelText: 'Item Name'),
-                validator: (val) =>
-                    (val.length == 0 ? 'This field is mandatory' : null),
+                validator:itemNameValidator.validate,
                 onSaved: (val) => setState(() => _item.itemName = val),
               ),
               TextFormField(
                 controller: _ctrlBrand,
                 decoration: InputDecoration(labelText: 'Brand'),
-                validator: (val) =>
-                    (val.length == 0 ? 'This field is mandatory' : null),
+                validator: itemBrand.validate,
                 onSaved: (val) => setState(() => _item.itemBrand = val),
               ),
               TextFormField(
                 controller: _ctrlPrice,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(labelText: 'Price'),
-                validator: (val) =>
-                    (val.length == 0 ? 'This field is mandatory' : null),
+                 validator: itemPrice.validate,
                 onSaved: (val) => setState(() => _item.itemPrice = val),
               ),
               Container(

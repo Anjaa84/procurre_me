@@ -7,6 +7,31 @@ class AdminPage extends StatefulWidget {
   _AdminPageState createState() => _AdminPageState();
 }
 
+class FirstNameValidation{
+  static String validate(String value){
+    return value.isEmpty ? 'First Name cannot be null':null;
+  }
+}
+
+class LastNameValidation{
+  static String validate(String value){
+    return value.isEmpty ? 'Last Name  cannot be null':null;
+  }
+}
+
+
+class EmailValidation{
+  static String validate(String value){
+    return value.isEmpty ? 'Email cannot be null':null;
+  }
+}
+
+class PasswordValidation{
+  static String validate(String value){
+    return value.isEmpty ? 'Passoword cannot be null':null;
+  }
+}
+
 class _AdminPageState extends State<AdminPage> {
   User _user=User();
 
@@ -53,30 +78,26 @@ String dropdownValue='Account Manager';
           TextFormField(
             controller:_ctrlFirstName ,
             decoration: InputDecoration(labelText: 'First Name'),
-            validator: (val) =>
-            (val.length == 0 ? 'This field is mandatory' : null),
+            validator: FirstNameValidation.validate,
             onSaved: (val) =>  setState(() => _user.firstname=val),),
           TextFormField(
             controller: _ctrlLastName,
             decoration: InputDecoration(labelText: 'Last Name'),
-            validator: (val) =>
-            (val.length == 0 ? 'This field is mandatory' : null),
+            validator: LastNameValidation.validate,
             onSaved: (val) => setState(() => _user.lastname = val),
           ),
           TextFormField(
             controller: _ctrlEmail,
 
             decoration: InputDecoration(labelText: 'Email'),
-            validator: (val) =>
-            (val.length == 0 ? 'This field is mandatory' : null),
+            validator: EmailValidation.validate,
             onSaved: (val) => setState(() => _user.email = val),
           ),
           TextFormField(
             controller: _ctrlPassword,
 
             decoration: InputDecoration(labelText: 'Password'),
-            validator: (val) =>
-            (val.length == 0 && val.length>4 ? 'This field is mandatory' : null),
+            validator: PasswordValidation.validate,
             onSaved: (val) => setState(() => _user.password = val),
           ),
           Container(

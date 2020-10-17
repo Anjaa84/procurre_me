@@ -12,6 +12,20 @@ class OrderPage extends StatefulWidget {
   _OrderPageState createState() => _OrderPageState();
 }
 
+
+class SiteLocationValidator{
+  static String validate(String value){
+    return value.isEmpty ? 'Location cannot be null':null;
+  }
+}
+
+class PriceOrder{
+  static String validate(String value){
+    return value.isEmpty ? 'Price cannot be null':null;
+  }
+}
+
+
 class _OrderPageState extends State<OrderPage> {
   Item _item = Item();
   User _user = User();
@@ -177,8 +191,7 @@ class _OrderPageState extends State<OrderPage> {
           TextFormField(
             controller: _ctrlSiteLocation,
             decoration: InputDecoration(labelText: 'Site Location'),
-            validator: (val) =>
-            (val.length == 0 ? 'This field is mandatory' : null),
+            validator: SiteLocationValidator.validate,
             onSaved: (val) => setState(() => _order.sLocation = val),
           ),
           FutureBuilder<List<User>>(
@@ -270,8 +283,7 @@ class _OrderPageState extends State<OrderPage> {
                   controller: _ctrlSupplierPrice,
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(labelText: 'Price'),
-                  validator: (val) =>
-                  (val.length == 0 ? 'This field is mandatory' : null),
+                  validator: PriceOrder.validate,
                   onSaved: (val) => setState(() => _order.price = int.parse(val)),
                 ),
 
