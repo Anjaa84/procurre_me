@@ -85,13 +85,16 @@ class _SupervisorPageState extends State<SupervisorPage> {
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold),
                           ),
-                          Text(
-                            _orders[index].itemName,
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold),
-                          ),
 
+
+                        ],
+                      ),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+
+                          Text ('Item Name :${_orders[index].itemName}'),
+                          Text ('Rs .${_orders[index].price}.00'),
                         ],
                       ),
 
