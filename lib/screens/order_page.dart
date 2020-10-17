@@ -33,8 +33,8 @@ class _OrderPageState extends State<OrderPage> {
   final _ctrlSupplier = TextEditingController();
   final _ctrlSupplierPrice = TextEditingController();
   final _ctrlDate = TextEditingController();
-   String _myActivity;
-   String _myActivityResult;
+  String _myActivity;
+  String _myActivityResult;
 
 
   _showForEdit(index) {
@@ -149,23 +149,8 @@ class _OrderPageState extends State<OrderPage> {
     _refreshOrderList();
   }
 
+  String dropDownValue = 'Account Manager';// string to  store the  drop down initial value
 
-  _dropDown(){
-    List li = List();
-    li.add("ss");
-    return DropdownButton<String>(
-        items: <String>[ li[0], 'Supervisor', 'Site Manager'].map((String value) {
-        return new DropdownMenuItem<String>(
-          value: value,
-          child: new Text(value),
-        );
-      }).toList(),
-      onChanged: (val) {
-        setState(() => _user.role = val);
-
-      },
-    );
-  }
 
 
   List<DropdownMenuItem<String>> getDropDownMenuItems() {
@@ -184,6 +169,7 @@ class _OrderPageState extends State<OrderPage> {
     color: Colors.white,
     padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
     child: Form(
+
       key: _formKey,
       child: Column(
         children: <Widget>[
@@ -200,8 +186,11 @@ class _OrderPageState extends State<OrderPage> {
               future: _dbHelper.getUserModelData(),
               builder: (BuildContext context,
                   AsyncSnapshot<List<User>> snapshot) {
+                String dropDownValue =snapshot.data[0].role;
+
                 if (!snapshot.hasData) return CircularProgressIndicator();
                 return DropdownButton<User>(
+
                   items: snapshot.data
                       .map((user) => DropdownMenuItem<User>(
                     child: Text(user.role),
