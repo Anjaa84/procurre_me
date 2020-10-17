@@ -17,6 +17,7 @@ class _OrderPageState extends State<OrderPage> {
   User _user = User();
   Orders _order=Orders();
   User _currentUser;
+  Item _currentItemList;
   Supplier _currentSupplier;
   List<Item> _items = [];
   List<Orders> _orders = [];
@@ -177,6 +178,8 @@ class _OrderPageState extends State<OrderPage> {
     }
     return items;
   }
+
+
   _form() => Container(
     color: Colors.white,
     padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
@@ -193,6 +196,7 @@ class _OrderPageState extends State<OrderPage> {
             onSaved: (val) => setState(() => _order.sLocation = val),
           ),
           FutureBuilder<List<User>>(
+
               future: _dbHelper.getUserModelData(),
               builder: (BuildContext context,
                   AsyncSnapshot<List<User>> snapshot) {
@@ -216,14 +220,38 @@ class _OrderPageState extends State<OrderPage> {
                 );
               }),
 
-          TextFormField(
-            controller: _ctrlSupplierName,
+          FutureBuilder<List<Item>>(
+              future: _dbHelper.getItemName(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<List<Item>> snapshot) {
+                if (!snapshot.hasData) return CircularProgressIndicator();
+                return DropdownButton<Item>(
+                  items: snapshot.data
+                      .map((itemVal) => DropdownMenuItem<Item>(
+                    child: Text("Item: "+itemVal.itemName+ " Brand: " +itemVal.itemBrand),
+                    value: itemVal,
+                  ))
+                      .toList(),
+                  onChanged: (Item value) {
+                    setState(() {
+                      _currentItemList = value;
+                    });
+                  },
+                  isExpanded: false,
+                  //value: _currentUser,
+                  hint: Text('Select Item'),
 
-            decoration: InputDecoration(labelText: 'Item Name'),
-            validator: (val) =>
-            (val.length == 0 ? 'This field is mandatory' : null),
-            onSaved: (val) => setState(() => _order.itemName = val),
-          ),
+                );
+              }),
+
+          // TextFormField(
+          //   controller: _ctrlSupplierName,
+          //
+          //   decoration: InputDecoration(labelText: 'Item Name'),
+          //   validator: (val) =>
+          //   (val.length == 0 ? 'This field is mandatory' : null),
+          //   onSaved: (val) => setState(() => _order.itemName = val),
+          // ),
 
           FutureBuilder<List<Supplier>>(
               future: _dbHelper.getSupplierModelData(),

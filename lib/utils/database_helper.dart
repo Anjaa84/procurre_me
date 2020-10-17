@@ -275,6 +275,23 @@ class DatabaseHelper {
     return list;
   }
 
+  //itemName
+  Future<List<Item>> getItemName() async {
+    Database db = await database;
+    String sql;
+    sql = "SELECT * FROM  ${Item.tblItem} ";
+
+    var result = await db.rawQuery(sql);
+    if (result.length == 0) return null;
+
+    List<Item> list = result.map((item) {
+      return Item.fromMap(item);
+    }).toList();
+
+
+    return list;
+  }
+
 
 }
 
