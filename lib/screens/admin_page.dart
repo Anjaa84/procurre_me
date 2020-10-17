@@ -21,10 +21,13 @@ class _AdminPageState extends State<AdminPage> {
   final _ctrlPassword = TextEditingController();
 
 
-
+  String dropDownValue = 'Account Manager';// string to  store the  drop down initial value
   _dropDown(){
 
-    return DropdownButton<String>(
+    return DropdownButton(
+      value:dropDownValue,
+
+
       items: <String>[ 'Account Manager', 'Supervisor', 'Site Manager'].map((String value) {
         return new DropdownMenuItem<String>(
           value: value,
@@ -32,7 +35,11 @@ class _AdminPageState extends State<AdminPage> {
         );
       }).toList(),
       onChanged: (val) {
-        setState(() => _user.role = val);
+        setState(() {
+          _user.role = val;
+          dropDownValue=val;
+        });
+
 
       },
     );
