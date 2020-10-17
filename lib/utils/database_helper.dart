@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:flutter_project/model/contact.dart';
 import 'package:flutter_project/model/item.dart';
 import 'package:flutter_project/model/orders.dart';
@@ -75,14 +76,13 @@ class DatabaseHelper {
       CREATE TABLE ${Orders.tblOrder}(
         ${Orders.colId} INTEGER PRIMARY KEY AUTOINCREMENT,
         ${Orders.colSLocation} TEXT  ,
-         ${Orders.colSManager} TEXT  ,
-          ${Orders.colItemName} TEXT  ,
-           ${Orders.colSupplier} TEXT  ,
-            ${Orders.colPrice} INTEGER  ,
-             ${Orders.colDate} TEXT  ,
-              ${Orders.colStatus} TEXT NULL
-            
-         
+        ${Orders.colSManager} TEXT  ,
+        ${Orders.colItemName} TEXT  ,
+        ${Orders.colSupplier} TEXT  ,
+        ${Orders.colPrice} INTEGER  ,
+        ${Orders.colDate} TEXT  ,
+        ${Orders.colStatus} TEXT NULL
+                    
       )
       ''');
 
@@ -212,12 +212,12 @@ class DatabaseHelper {
   Future<List<Orders>> getOrdersPrice() async {
     Database db = await database;
     String sql;
-    sql = "SELECT * FROM  ${Orders.tblOrder} where ${Orders.colPrice}>100000";
-//    sql = "SELECT * FROM  ${Orders.tblOrder} where ${Orders.colPrice}>100000 and ${Orders.colStatus}='Pending' ";
-        print(sql);
+    sql = "SELECT * FROM  ${Orders.tblOrder} where ${Orders.colPrice}>100000 and ${Orders.colStatus} is  null  ";
+    //and ${Orders.colStatus}='Pending'
 
     var result = await db.rawQuery(sql);
     if (result.length == 0) return null;
+    print(result);
 
     List<Orders> list = result.map((item) {
       return Orders.fromMap(item);
@@ -235,7 +235,7 @@ class DatabaseHelper {
     sql = "UPDATE ${Orders.tblOrder} SET ${Orders.colStatus}='${status}' where ${Orders.colId}=${index}";
 
     var result = await db.rawQuery(sql);
-print(sql);
+    print(sql);
 
 
   }

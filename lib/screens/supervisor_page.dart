@@ -36,7 +36,7 @@ class _SupervisorPageState extends State<SupervisorPage> {
 // drop down list that shows the status
   _dropDown(int index) {
     return DropdownButton<String>(
-      items: <String>['Pending', 'Apporved'].map((String value) {
+      items: <String>['Approved'].map((String value) {
         return new DropdownMenuItem<String>(
           value: value,
           child: new Text(value),
@@ -85,6 +85,13 @@ class _SupervisorPageState extends State<SupervisorPage> {
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold),
                           ),
+                          Text(
+                            _orders[index].itemName,
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold),
+                          ),
+
                         ],
                       ),
 
@@ -100,6 +107,7 @@ class _SupervisorPageState extends State<SupervisorPage> {
                 );
               },
               itemCount: _orders.length,
+
             ),
           ),
         ),
