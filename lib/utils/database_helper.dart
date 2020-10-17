@@ -283,4 +283,21 @@ class DatabaseHelper {
     Database db = await database;
     return await db.insert(Inquiry.tblInquiry, inquiry.toMap());
   }
+
+  //Get approved orders to account Manager
+  Future<List<Orders>> getApproveOrders() async {
+    Database db = await database;
+    String sql;
+    sql =
+    "SELECT * FROM  ${Orders.tblOrder} where ${Orders.colPrice}>100000 and ${Orders.colStatus}='Approved' ";
+    var result = await db.rawQuery(sql);
+    if (result.length == 0) return null;
+    print(result);
+
+    List<Orders> list = result.map((item) {
+      return Orders.fromMap(item);
+    }).toList();
+
+    return list;
+  }
 }
