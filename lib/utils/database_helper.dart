@@ -166,6 +166,8 @@ class DatabaseHelper {
   Future<List<User>>fetchUsers() async{
     Database db = await database;
     List users = await db.query(User.tblUser);
+
+    print(users);
     return users.length ==0
         ? []
         :users.map((e) => User.fromMap(e)).toList();

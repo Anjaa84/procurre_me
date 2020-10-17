@@ -168,6 +168,7 @@ class _OrderPageState extends State<OrderPage> {
     color: Colors.white,
     padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
     child: Form(
+
       key: _formKey,
       child: Column(
         children: <Widget>[
